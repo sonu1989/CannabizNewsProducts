@@ -5,24 +5,37 @@ class RedisSetStateKeys
 	# have to set state vendors
 	
 	
-	def initialize
+	def initialize()
 	end
 	
 	def set_state_keys()
-		State.each do |state|
+		State.all.each do |state|
 			
 			
 			if state.product_state
 				
 				#set state vendors
-				vendors = Vendor.where(state_id: state.id).order("RANDOM()")
+				vendors = state.vendors.order("RANDOM()")
 				$redis.set("#{state.name.downcase}_vendors", Marshal.dump(vendors))
 				
 				#set state dispensaries
-				dispensaries = Dispensary.where(state_id: @site_visitor_state.id).order("RANDOM()")
-                $redis.set("#{@site_visitor_state.name.downcase}_dispensaries", Marshal.dump(dispensaries))
-                
+				dispensaries = state.dispensaries.order("RANDOM()")
+                $redis.set("#{state.name.downcase}_dispensaries", Marshal.dump(dispensaries))
+            
+            	#state products? - maybe for product index?
 			end
+			
+			#state articles for all states
+			
+			#recent
+			recents = state.articles.active_source.
+                        includes(:source, :categories, :states).order("created_at DESC")
+            $redis.set("#{state.name.downcase}_recent_articles", Marshal.dump(recents))
+			
+			#most views
+			mostviews = state.articles.active_source.
+                        includes(:source, :categories, :states).order("num_views DESC")
+            $redis.set("#{state.name.downcase}_mostview_articles", Marshal.dump(mostviews))
 		
 		end
 	end

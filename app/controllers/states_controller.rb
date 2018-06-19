@@ -39,26 +39,27 @@ class StatesController < ApplicationController
     end
     
     #refine the products on the state index
-    def refine_products
-        @state = State.where(id: params[:state_id]).first
+    #not using products on state show anymore
+    # def refine_products
+    #     @state = State.where(id: params[:state_id]).first
         
-        #state articles
-        @recents = @state.articles.active_source.order("created_at DESC").paginate(:page => params[:page], :per_page => 24)
-        #@mostviews = @state.articles.active_source.order("num_views DESC").paginate(:page => params[:page], :per_page => 24)
+    #     #state articles
+    #     @recents = @state.articles.active_source.order("created_at DESC").paginate(:page => params[:page], :per_page => 24)
+    #     #@mostviews = @state.articles.active_source.order("num_views DESC").paginate(:page => params[:page], :per_page => 24)
         
-        #state products
-        params[:state_search] = @state.name
-        result = ProductFinder.new(params).build
+    #     #state products
+    #     params[:state_search] = @state.name
+    #     result = ProductFinder.new(params).build
         
-        #parse returns
-        @products, @search_string, @searched_name, @az_letter, 
-            @searched_category, @searched_location, @searched_state = 
-                result[0], result[1], result[2], result[3], result[4], result[5], result[6]
+    #     #parse returns
+    #     @products, @search_string, @searched_name, @az_letter, 
+    #         @searched_category, @searched_location, @searched_state = 
+    #             result[0], result[1], result[2], result[3], result[4], result[5], result[6]
         
-        @products = @products.paginate(page: params[:page], per_page: 16)
+    #     @products = @products.paginate(page: params[:page], per_page: 16)
         
-        render 'show'
-    end
+    #     render 'show'
+    # end
     
     private 
         

@@ -7,6 +7,6 @@ class RedisVendorWorker
     end    
     
     def setVendorKeys()
-        RedisSetVendorKeys.set_vendor_keys
+        RedisSetVendorKeys.set_vendor_keys()
     end  
 end
